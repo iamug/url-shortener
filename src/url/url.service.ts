@@ -1,26 +1,53 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUrlDto } from './dto/create-url.dto';
 import { UpdateUrlDto } from './dto/update-url.dto';
+import { MemoryDatabaseService } from 'src/shared/database/memory/memorydb.service';
+import { Url } from './entities/url.entity';
+import { randomURLSafeCharacters } from 'src/shared/utils/helper.utils';
 
 @Injectable()
 export class UrlService {
-  create(createUrlDto: CreateUrlDto) {
-    return 'This action adds a new url';
+  constructor(private readonly memoryDatabase: MemoryDatabaseService<Url>) {}
+
+  private generateShortId(): string {
+    const shortId = randomURLSafeCharacters(10);
+    const shortIdExists = this.memoryDatabase.findOneByProperty(
+      'shortId',
+      shortId,
+    );
+    if (shortIdExists) {
+      return this.generateShortId();
+    }
+    return shortId;
   }
 
-  findAll() {
-    return `This action returns all url`;
+  encodeURL(input: Record<'longUrl', string>) {
+    try {
+      const { longUrl } = input;
+      const shortId = this.generateShortId();
+      const newObject = new Url({ shortId, longUrl });
+      this.memoryDatabase.add(newObject);
+      return {
+        shortId,
+        longUrl,
+      };
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} url`;
-  }
-
-  update(id: number, updateUrlDto: UpdateUrlDto) {
-    return `This action updates a #${id} url`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} url`;
+  decodeURL(input: Record<'shortId', string>): Promise<Url | never> {
+    try {
+      const { shortId } = input;
+      const shortIdData = this.memoryDatabase.findOneByProperty(
+        'shortId',
+        shortId,
+      );
+      if (!shortIdData)
+        throw new NotFoundException('Short URL does not exist.');
+      return Promise.resolve(shortIdData);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 }
