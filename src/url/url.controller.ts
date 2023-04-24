@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  BadRequestException,
+} from '@nestjs/common';
 import { UrlService } from './url.service';
 import { CreateUrlDto } from './dto/create-url.dto';
 import { UpdateUrlDto } from './dto/update-url.dto';
@@ -7,28 +16,17 @@ import { UpdateUrlDto } from './dto/update-url.dto';
 export class UrlController {
   constructor(private readonly urlService: UrlService) {}
 
-  @Post()
+  @Post('encode')
   create(@Body() createUrlDto: CreateUrlDto) {
-    return this.urlService.create(createUrlDto);
+    return this.urlService.encodeURL(createUrlDto as any);
   }
 
-  @Get()
-  findAll() {
-    return this.urlService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.urlService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUrlDto: UpdateUrlDto) {
-    return this.urlService.update(+id, updateUrlDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.urlService.remove(+id);
+  @Get('decode/:id')
+  async findOne(@Param('id') shortId: string) {
+    return await this.urlService.decodeURL({ shortId }).catch((error) => {
+      throw new BadRequestException(error, {
+        cause: error,
+      });
+    });
   }
 }

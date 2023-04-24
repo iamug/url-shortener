@@ -10,7 +10,6 @@ export class MemoryDatabaseService<T> {
 
   add(obj: T): void {
     this.data.push(obj);
-    console.log({ data: this.data });
   }
 
   findOneByProperty(prop: keyof T, value: unknown): T {
