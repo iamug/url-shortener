@@ -9,7 +9,7 @@ export class Url {
 
   visits: number;
 
-  lastVisisted: Date;
+  lastVisisted: Date | string;
 
   createdAt: Date | string;
 

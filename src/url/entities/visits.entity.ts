@@ -7,9 +7,9 @@ export class Visits {
 
   ip: string;
 
-  userAgent: string;
+  userAgent?: string;
 
-  referrer: string;
+  referer: string;
 
   visitDate: Date | string;
 
@@ -18,6 +18,7 @@ export class Visits {
     this.shortId = data.shortId;
     this.ip = data.ip;
     this.userAgent = data.userAgent;
+    this.referer = data.referer;
     this.visitDate = data.visitDate || new Date().toISOString();
   }
 }
