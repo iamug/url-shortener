@@ -1,20 +1,12 @@
-// import { ApiProperty } from '@nestjs/swagger';
-
-class ErrorObject {
-  // @ApiProperty({ description: 'error message can be a string or object' })
-  message: string;
-}
+import { ApiProperty } from '@nestjs/swagger';
 
 export class APIErrorResponse {
-  // @ApiProperty({ example: 'error' })
-  // status: string;
-
+  @ApiProperty()
   success: false;
 
-  // @ApiProperty({ description: 'error message can be a string or object', example : "error message can be a string or object" })
+  @ApiProperty({ description: 'error message can be a string or object', example: 'error message can be a string or object' })
   message: string | object;
-  timestamp: string;
 
-  // @ApiProperty({ type: ErrorObject })
-  // error: ErrorObject;
+  @ApiProperty({ type: Date })
+  timestamp: Date | string;
 }
