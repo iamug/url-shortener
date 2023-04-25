@@ -3,9 +3,17 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UrlModule } from './url/url.module';
 import { MemoryDatabaseModule } from './shared/database/memory/memorydb.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [MemoryDatabaseModule, UrlModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env.local', '.env'],
+    }),
+    MemoryDatabaseModule,
+    UrlModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
