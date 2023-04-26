@@ -55,7 +55,7 @@ export class VisitsResponseDto {
 }
 
 class TopIp {
-  @ApiProperty()
+  @ApiProperty({ type: String })
   ip: Visits['ip'];
 
   @ApiProperty()
@@ -63,7 +63,7 @@ class TopIp {
 }
 
 class TopUserAgent {
-  @ApiProperty()
+  @ApiProperty({ type: String })
   userAgent: Visits['userAgent'];
 
   @ApiProperty()

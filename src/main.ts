@@ -9,7 +9,7 @@ import { HttpExceptionFilter } from './shared/filters/http-exception.filter';
 import { SuccessRequestInterceptor } from './shared/interceptors/success-request.interceptor';
 import { LoggingInterceptor } from './shared/interceptors/request-logger.interceptor';
 import { APISuccessResponse } from './shared/dto/success-response.dto';
-import { APIErrorResponse } from './shared/dto/error-response.dto';
+import { APIErrorResponse, APIValidationErrorResponse } from './shared/dto/error-response.dto';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -32,7 +32,7 @@ async function bootstrap() {
   );
   const config = new DocumentBuilder().addServer(`http://localhost:${appconfig().PORT}/`).setTitle('URL Shortener').setDescription('URL Shortener API description').setVersion('1.0').build();
   const document = SwaggerModule.createDocument(app, config, {
-    extraModels: [APISuccessResponse, APIErrorResponse],
+    extraModels: [APISuccessResponse, APIErrorResponse, APIValidationErrorResponse],
   });
   SwaggerModule.setup('api', app, document);
   app.use(compression());
