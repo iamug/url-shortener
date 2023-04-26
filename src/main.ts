@@ -13,7 +13,7 @@ import { APIErrorResponse } from './shared/dto/error-response.dto';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api', { exclude: [''] });
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: '1',
@@ -45,7 +45,6 @@ async function bootstrap() {
     origin: '*',
     credentials: true,
   });
-  await app.listen(appconfig().PORT);
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  await app.listen(appconfig().PORT, async () => console.log(`Application is running on: ${await app.getUrl()}`));
 }
 bootstrap();
