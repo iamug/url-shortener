@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { Request } from 'express';
 import { UrlService } from './url.service';
 import { MemoryDatabaseModule } from 'src/shared/database/memory/memorydb.module';
 import { VisitsService } from './visits.service';
 import { MemoryDatabaseService } from 'src/shared/database/memory/memorydb.service';
 import { Url } from './entities/url.entity';
 import { NotFoundException } from '@nestjs/common';
-import { Request } from 'express';
 
 describe('UrlService', () => {
   let service: UrlService;
