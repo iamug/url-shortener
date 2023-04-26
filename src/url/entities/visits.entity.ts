@@ -7,7 +7,7 @@ export class Visits {
 
   ip: string;
 
-  userAgent?: string;
+  userAgent: string;
 
   referer: string;
 

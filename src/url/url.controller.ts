@@ -1,29 +1,33 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  BadRequestException,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, BadRequestException, Req } from '@nestjs/common';
 import { UrlService } from './url.service';
-import { CreateUrlDto } from './dto/create-url.dto';
-import { UpdateUrlDto } from './dto/update-url.dto';
+import { EncodeUrlDto } from './dto/encode-url.dto';
+import { Request } from 'express';
 
 @Controller('url')
 export class UrlController {
   constructor(private readonly urlService: UrlService) {}
 
   @Post('encode')
-  create(@Body() createUrlDto: CreateUrlDto) {
-    return this.urlService.encodeURL(createUrlDto as any);
+  async encode(@Body() body: EncodeUrlDto) {
+    return await this.urlService.encodeURL(body).catch((error) => {
+      throw new BadRequestException(error, {
+        cause: error,
+      });
+    });
   }
 
   @Get('decode/:id')
-  async findOne(@Param('id') shortId: string) {
-    return await this.urlService.decodeURL({ shortId }).catch((error) => {
+  async decode(@Param('id') shortId: string, @Req() req: Request) {
+    return await this.urlService.decodeURL({ shortId, req }).catch((error) => {
+      throw new BadRequestException(error, {
+        cause: error,
+      });
+    });
+  }
+
+  @Get('statistics/:id')
+  async statistics(@Param('id') shortId: string) {
+    return await this.urlService.getStatisticsForShortId({ shortId }).catch((error) => {
       throw new BadRequestException(error, {
         cause: error,
       });
